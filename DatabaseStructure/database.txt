@@ -1,1 +1,138 @@
 
+//create database tables//
+==========================================
+            1.Batch
+==========================================
+
+CREATE TABLE batch
+(
+  bid bigserial NOT NULL,
+  bcode character varying(50) NOT NULL,
+  bname character varying(100),
+  status integer,
+  dept_code character varying(100),
+  CONSTRAINT bcode_pk PRIMARY KEY (bcode)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE batch
+  OWNER TO postgres;
+========================================================
+        2. Course
+===========================================================
+
+CREATE TABLE course
+(
+  id bigserial NOT NULL,
+  ccode character varying(100) NOT NULL,
+  cname character varying(100),
+  status integer,
+  CONSTRAINT c_code_pk PRIMARY KEY (ccode)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE course
+  OWNER TO postgres;
+  
+ ===================================
+        3. Department
+ ===================================
+ CREATE TABLE department
+(
+  id bigserial NOT NULL,
+  deptcode character varying(100) NOT NULL,
+  deptname character varying(100),
+  hod character varying(100),
+  status integer,
+  CONSTRAINT dept_code_pk PRIMARY KEY (deptcode),
+  CONSTRAINT hod_fk FOREIGN KEY (hod)
+      REFERENCES teacher (tcode) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE department
+  OWNER TO postgres;
+===================================
+        4.subject_master
+==================================
+
+CREATE TABLE subject_master
+(
+  id bigserial NOT NULL,
+  sub_code character varying(100) NOT NULL,
+  sub_name character varying(100),
+  dept_code character varying(100),
+  status integer,
+  CONSTRAINT sub_code_pk PRIMARY KEY (sub_code),
+  CONSTRAINT dept_code_fk FOREIGN KEY (dept_code)
+      REFERENCES department (deptcode) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE subject_master
+  OWNER TO postgres;
+  
+  ================================
+         5.teacher
+  ===============================
+  CREATE TABLE teacher
+(
+  id bigserial NOT NULL,
+  tcode character varying(50) NOT NULL,
+  tname character varying(150),
+  dept_code character varying(100),
+  mail character varying(150),
+  status integer,
+  hod_status integer,
+  CONSTRAINT tcode_pk PRIMARY KEY (tcode),
+  CONSTRAINT dept_code_fk FOREIGN KEY (dept_code)
+      REFERENCES department (deptcode) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE teacher
+  OWNER TO postgres;
+
+====================================
+        6. user_master
+====================================
+
+CREATE TABLE user_master
+(
+  id bigserial NOT NULL,
+  user_code character varying(100) NOT NULL,
+  user_name character varying(100),
+  fullname character varying(100),
+  dept_code character varying(50),
+  email character varying(100),
+  password character varying(100),
+  status integer,
+  mentor character varying(50),
+  ccode character varying(100),
+  rlcode character varying(100),
+  CONSTRAINT user_code PRIMARY KEY (user_code),
+  CONSTRAINT c_code_fk FOREIGN KEY (ccode)
+      REFERENCES course (ccode) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT mentor_fk FOREIGN KEY (mentor)
+      REFERENCES teacher (tcode) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT rl_code FOREIGN KEY (rlcode)
+      REFERENCES role_master (role_code) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE user_master
+  OWNER TO postgres;
+
+
