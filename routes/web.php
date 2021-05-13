@@ -38,6 +38,6 @@ Route::get('/fetchTeacher','FileController@getTeacher');
 
 
 Route::post('/sendMail','FileController@sendMail');
-Route::post('/sendFeedbackMail','FileController@sendFeedbackMail');
+Route::post('/sendFeedbackMail','FeedbackController@sendFeedbackMail');
 
 
